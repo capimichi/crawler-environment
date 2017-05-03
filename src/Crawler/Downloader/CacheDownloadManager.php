@@ -24,7 +24,7 @@ class CacheDownloadManager
     {
         $this->downloadManager = $downloadManager;
         $this->cacheDirectory = $cacheDirectory;
-        if(!file_exists($cacheDirectory)){
+        if (!file_exists($cacheDirectory)) {
             $this->createDirectory($cacheDirectory);
         }
     }
@@ -32,9 +32,10 @@ class CacheDownloadManager
     /**
      * @return null|string
      */
-    public function getContent(){
-        $cachePath = $this->getCacheDir() . $this->getCacheName();
-        if(file_exists($cachePath)){
+    public function getContent()
+    {
+        $cachePath = $this->getCacheFile();
+        if (file_exists($cachePath)) {
             $content = file_get_contents($cachePath);
         } else {
             $content = $this->downloadManager->getContent();
@@ -46,7 +47,8 @@ class CacheDownloadManager
     /**
      * @return \DOMDocument
      */
-    public function getDom(){
+    public function getDom()
+    {
         $dom = new \DOMDocument();
         @$dom->loadHTML($this->getContent());
         return $dom;
@@ -55,7 +57,8 @@ class CacheDownloadManager
     /**
      * @return \DOMXPath
      */
-    public function getXpath(){
+    public function getXpath()
+    {
         $xpath = new \DOMXPath($this->getDom());
         return $xpath;
     }
@@ -63,20 +66,30 @@ class CacheDownloadManager
     /**
      * @return string
      */
-    protected function getCacheName(){
-        return md5($this->downloadManager->getUrl()) . ".html";
+    public function getCacheFile()
+    {
+        return $this->getCacheDir() . $this->getCacheName();
     }
 
     /**
      * @return string
      */
-    protected function getCacheDir(){
+    protected function getCacheName()
+    {
+        return md5($this->downloadManager->getUrl());
+    }
+
+    /**
+     * @return string
+     */
+    protected function getCacheDir()
+    {
         $subdir = rtrim($this->cacheDirectory, DIRECTORY_SEPARATOR);
         $subdir .= DIRECTORY_SEPARATOR . substr($this->getCacheName(), 0, 2);
         $subdir .= DIRECTORY_SEPARATOR . substr($this->getCacheName(), 2, 2);
         $subdir .= DIRECTORY_SEPARATOR . substr($this->getCacheName(), 4, 2);
         $subdir .= DIRECTORY_SEPARATOR;
-        if(!file_exists($subdir)){
+        if (!file_exists($subdir)) {
             $this->createDirectory($subdir);
         }
         return $subdir;
@@ -85,10 +98,10 @@ class CacheDownloadManager
     /**
      * @param $directory
      */
-    protected function createDirectory($directory){
+    protected function createDirectory($directory)
+    {
         mkdir($directory, 0777, true);
     }
-
 
 
 }

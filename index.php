@@ -22,7 +22,7 @@ function scrapePage($url)
     global $productUrls, $scrapedPageUrls;
     if (!in_array($url, $scrapedPageUrls)) {
         array_push($scrapedPageUrls, $url);
-        $cdm = new CacheDownloadManager(new SimpleDownloadManager($url), dirname(__FILE__) . "/var/cache/");
+        $cdm = new CacheDownloadManager(new SimpleDownloadManager($url), dirname(__FILE__) . "/var/cache/page/");
         $xpath = $cdm->getXpath();
 
         // Scan pages urls
@@ -43,7 +43,7 @@ function scrapeProduct($url)
 {
     global $scrapedProductUrls, $products;
     if (!in_array($url, $scrapedProductUrls)) {
-        $cdm = new CacheDownloadManager(new SimpleDownloadManager($url), dirname(__FILE__) . "/var/cache/");
+        $cdm = new CacheDownloadManager(new SimpleDownloadManager($url), dirname(__FILE__) . "/var/cache/product/");
         $dom = $cdm->getDom();
         $xpath = $cdm->getXpath();
 
@@ -94,6 +94,11 @@ function scrapeProduct($url)
         $domImage = $xpath->query("//*[contains(concat(' ', normalize-space(@class), ' '), ' product-images ')]//figure//img/@src");
         $image = $domImage->item(0)->nodeValue;
 
+        // Download image
+        $im = new CacheDownloadManager(new SimpleDownloadManager($image), dirname(__FILE__) . "/var/cache/image");
+        $im->getContent();
+        $localImage = $im->getCacheFile();
+
         $product = array(
             "slug"        => md5($url),
             "title"       => $title,
@@ -102,6 +107,7 @@ function scrapeProduct($url)
             "tags"        => $tags,
             "categories"  => $categories,
             "image"       => $image,
+            "localImage"  => $localImage,
         );
         array_push($products, $product);
     }
