@@ -71,7 +71,7 @@ class CacheDownloadManager
      * @return string
      */
     protected function getCacheDir(){
-        $subdir = trim($this->cacheDirectory, DIRECTORY_SEPARATOR);
+        $subdir = rtrim($this->cacheDirectory, DIRECTORY_SEPARATOR);
         $subdir .= DIRECTORY_SEPARATOR . substr($this->getCacheName(), 0, 2);
         $subdir .= DIRECTORY_SEPARATOR . substr($this->getCacheName(), 2, 2);
         $subdir .= DIRECTORY_SEPARATOR . substr($this->getCacheName(), 4, 2);

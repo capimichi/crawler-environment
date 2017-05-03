@@ -2,8 +2,8 @@
 use Crawler\Downloader\CacheDownloadManager;
 use Crawler\Downloader\SimpleDownloadManager;
 
-require_once "vendor/autoload.php";
-require_once "src/autoload.php";
+require_once dirname(__FILE__) . "/vendor/autoload.php";
+require_once dirname(__FILE__) . "/src/autoload.php";
 
 $products = [];
 $productUrls = [];
@@ -22,7 +22,7 @@ function scrapePage($url)
     global $productUrls, $scrapedPageUrls;
     if (!in_array($url, $scrapedPageUrls)) {
         array_push($scrapedPageUrls, $url);
-        $cdm = new CacheDownloadManager(new SimpleDownloadManager($url), "var/cache/");
+        $cdm = new CacheDownloadManager(new SimpleDownloadManager($url), dirname(__FILE__) . "/var/cache/");
         $xpath = $cdm->getXpath();
 
         // Scan pages urls
@@ -43,7 +43,7 @@ function scrapeProduct($url)
 {
     global $scrapedProductUrls, $products;
     if (!in_array($url, $scrapedProductUrls)) {
-        $cdm = new CacheDownloadManager(new SimpleDownloadManager($url), "var/cache/");
+        $cdm = new CacheDownloadManager(new SimpleDownloadManager($url), dirname(__FILE__) . "/var/cache/");
         $dom = $cdm->getDom();
         $xpath = $cdm->getXpath();
 
