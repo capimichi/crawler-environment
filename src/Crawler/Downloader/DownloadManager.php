@@ -22,5 +22,12 @@ abstract class DownloadManager
      */
     abstract public function getContent();
 
+    /**
+     * @return string
+     */
+    public function getUrl()
+    {
+        return $this->url;
+    }
 
 }

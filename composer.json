@@ -6,5 +6,7 @@
             "email": "capimichi@gmail.com"
         }
     ],
-    "require": {}
+    "require": {
+        "marc1706/fast-image-size": "^1.1"
+    }
 }
