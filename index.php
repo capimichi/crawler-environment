@@ -15,7 +15,7 @@ $productUrls = array_unique($productUrls);
 foreach ($productUrls as $productUrl) {
     scrapeProduct($productUrl);
 }
-print_r($products);
+echo json_encode($products);
 
 function scrapePage($url)
 {
@@ -90,6 +90,10 @@ function scrapeProduct($url)
             array_push($categories, $domCategory->nodeValue);
         }
 
+        // Image
+        $domImage = $xpath->query("//*[contains(concat(' ', normalize-space(@class), ' '), ' product-images ')]//figure//img/@src");
+        $image = $domImage->item(0)->nodeValue;
+
         $product = array(
             "slug"        => md5($url),
             "title"       => $title,
@@ -97,6 +101,7 @@ function scrapeProduct($url)
             "description" => $description,
             "tags"        => $tags,
             "categories"  => $categories,
+            "image"       => $image,
         );
         array_push($products, $product);
     }
