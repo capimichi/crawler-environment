@@ -30,4 +30,20 @@ abstract class DownloadManager
         return $this->url;
     }
 
+    /**
+     * @return \DOMDocument
+     */
+    public function getDom(){
+        $dom = new \DOMDocument();
+        @$dom->loadHTML($this->getContent());
+        return $dom;
+    }
+
+    /**
+     * @return \DOMXPath
+     */
+    public function getXpath(){
+        $xpath = new \DOMXPath($this->getDom());
+        return $xpath;
+    }
 }

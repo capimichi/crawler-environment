@@ -7,6 +7,7 @@
         }
     ],
     "require": {
-        "marc1706/fast-image-size": "^1.1"
+        "marc1706/fast-image-size": "^1.1",
+        "symfony/console": "^3.2"
     }
 }

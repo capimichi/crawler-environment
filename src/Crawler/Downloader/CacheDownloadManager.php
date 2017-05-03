@@ -44,10 +44,27 @@ class CacheDownloadManager
     }
 
     /**
+     * @return \DOMDocument
+     */
+    public function getDom(){
+        $dom = new \DOMDocument();
+        @$dom->loadHTML($this->getContent());
+        return $dom;
+    }
+
+    /**
+     * @return \DOMXPath
+     */
+    public function getXpath(){
+        $xpath = new \DOMXPath($this->getDom());
+        return $xpath;
+    }
+
+    /**
      * @return string
      */
     protected function getCacheName(){
-        return md5($this->downloadManager->getUrl());
+        return md5($this->downloadManager->getUrl()) . ".html";
     }
 
     /**
