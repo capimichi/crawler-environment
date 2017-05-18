@@ -9,6 +9,11 @@ abstract class DownloadManager
     protected $url;
 
     /**
+     * @var array
+     */
+    protected $headers;
+
+    /**
      * DownloadManager constructor.
      * @param string $url
      */
@@ -33,7 +38,8 @@ abstract class DownloadManager
     /**
      * @return \DOMDocument
      */
-    public function getDom(){
+    public function getDom()
+    {
         $dom = new \DOMDocument();
         @$dom->loadHTML($this->getContent());
         return $dom;
@@ -42,8 +48,37 @@ abstract class DownloadManager
     /**
      * @return \DOMXPath
      */
-    public function getXpath(){
+    public function getXpath()
+    {
         $xpath = new \DOMXPath($this->getDom());
         return $xpath;
+    }
+
+    /**
+     * @return array
+     */
+    public function getHeaders()
+    {
+        return $this->headers;
+    }
+
+    /**
+     * @param array $headers
+     */
+    protected function setHeaders($headers)
+    {
+        $this->headers = $headers;
+    }
+
+    /**
+     * @return array
+     */
+    protected function generatelHeaders($httpHeaders)
+    {
+        $additionalHeaders = array(
+            "httpHeaders" => $httpHeaders,
+            "created"     => date("d-m-Y H:i:s"),
+        );
+        return $additionalHeaders;
     }
 }

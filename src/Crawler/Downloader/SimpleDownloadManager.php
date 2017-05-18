@@ -8,7 +8,11 @@ class SimpleDownloadManager extends DownloadManager
      */
     public function getContent()
     {
-        return file_get_contents($this->url);
+        $content = file_get_contents($this->url);
+        $this->setHeaders($this->generatelHeaders($http_response_header));
+        $jsonHeaders = json_encode($this->getHeaders());
+        $content = "[downloadManager]{$jsonHeaders}[/downloadManager]" . $content;
+        return $content;
     }
 
 }

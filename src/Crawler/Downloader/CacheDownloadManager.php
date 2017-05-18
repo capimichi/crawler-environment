@@ -14,6 +14,11 @@ class CacheDownloadManager
      */
     protected $cacheDirectory;
 
+    /**
+     * @var array
+     */
+    protected $headers;
+
 
     /**
      * CacheDownloadManager constructor.
@@ -41,6 +46,7 @@ class CacheDownloadManager
             $content = $this->downloadManager->getContent();
             file_put_contents($cachePath, $content);
         }
+        $this->setHeaders($this->generateHeaders($content));
         return $content;
     }
 
@@ -69,6 +75,14 @@ class CacheDownloadManager
     public function getCacheFile()
     {
         return $this->getCacheDir() . $this->getCacheName();
+    }
+
+    /**
+     * @return array
+     */
+    public function getHeaders()
+    {
+        return $this->headers;
     }
 
     /**
@@ -101,6 +115,29 @@ class CacheDownloadManager
     protected function createDirectory($directory)
     {
         mkdir($directory, 0777, true);
+    }
+
+    /**
+     * @param array $headers
+     */
+    protected function setHeaders($headers)
+    {
+        $this->headers = $headers;
+    }
+
+    /**
+     * @param $content
+     *
+     * @return array|null
+     */
+    protected function generateHeaders($content)
+    {
+        if (preg_match("/\[downloadManager\](.*?)\[\/downloadManager\]/is", $content, $headers)) {
+            $headers = $headers[1];
+            $headers = json_decode($headers);
+            return $headers;
+        }
+        return null;
     }
 
 
