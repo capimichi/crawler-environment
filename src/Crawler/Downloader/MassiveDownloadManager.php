@@ -1,4 +1,5 @@
 <?php
+
 namespace Crawler\Downloader;
 
 class MassiveDownloadManager extends DownloadManager
@@ -19,6 +20,7 @@ class MassiveDownloadManager extends DownloadManager
             CURLOPT_CONNECTTIMEOUT => 0,
             CURLOPT_RETURNTRANSFER => 1,
             CURLOPT_FOLLOWLOCATION => 1,
+            CURLOPT_HEADER         => 1,
         );
         $options = array_merge($defaultCurlOptions, $curlOptions);
         $this->curlOptions = $options;
@@ -34,7 +36,7 @@ class MassiveDownloadManager extends DownloadManager
         $ch = curl_init($this->url);
         $data = curl_exec($ch);
         $error = curl_error($ch);
-        if($error){
+        if ($error) {
             throw new \Exception("CURL ERROR: {$error}");
         }
         curl_close($ch);
@@ -45,8 +47,9 @@ class MassiveDownloadManager extends DownloadManager
      * @param $ch
      * @return mixed
      */
-    protected function buildCurl($ch){
-        foreach($this->curlOptions as $key => $value){
+    protected function buildCurl($ch)
+    {
+        foreach ($this->curlOptions as $key => $value) {
             curl_setopt($ch, $key, $value);
         }
         return $ch;

@@ -1,4 +1,5 @@
 <?php
+
 namespace Crawler\Downloader;
 
 
@@ -35,9 +36,11 @@ class CacheDownloadManager
     }
 
     /**
+     * @param bool $raw If true remove headers
+     *
      * @return null|string
      */
-    public function getContent()
+    public function getContent($raw = false)
     {
         $cachePath = $this->getCacheFile();
         if (file_exists($cachePath)) {
@@ -47,6 +50,9 @@ class CacheDownloadManager
             file_put_contents($cachePath, $content);
         }
         $this->setHeaders($this->generateHeaders($content));
+        if ($raw) {
+            $content = preg_replace("\[downloadManager\].*?\[\/downloadManager\]", "", $content);
+        }
         return $content;
     }
 
@@ -139,6 +145,5 @@ class CacheDownloadManager
         }
         return null;
     }
-
 
 }

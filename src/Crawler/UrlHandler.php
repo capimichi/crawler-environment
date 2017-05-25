@@ -1,8 +1,17 @@
 <?php
 
+namespace Crawler;
+
+/**
+ * Class UrlHandler
+ */
 class UrlHandler
 {
-
+    /**
+     * @param $baseUrl
+     * @param $relativeUrl
+     * @return bool|string
+     */
     public function urlToAbsolute($baseUrl, $relativeUrl)
     {
         // If relative URL has a scheme, clean path and return.
@@ -15,13 +24,13 @@ class UrlHandler
             return $this->joinUrl($r);
         }
 
-// Make sure the base URL is absolute.
+        // Make sure the base URL is absolute.
         $b = $this->splitUrl($baseUrl);
         if ($b === FALSE || empty($b['scheme']) || empty($b['host']))
             return FALSE;
         $r['scheme'] = $b['scheme'];
 
-// If relative URL has an authority, clean path and return.
+        // If relative URL has an authority, clean path and return.
         if (isset($r['host'])) {
             if (!empty($r['path']))
                 $r['path'] = $this->removeDotSegments($r['path']);
@@ -31,13 +40,13 @@ class UrlHandler
         unset($r['user']);
         unset($r['pass']);
 
-// Copy base authority.
+        // Copy base authority.
         $r['host'] = $b['host'];
         if (isset($b['port'])) $r['port'] = $b['port'];
         if (isset($b['user'])) $r['user'] = $b['user'];
         if (isset($b['pass'])) $r['pass'] = $b['pass'];
 
-// If relative URL has no path, use base path
+        // If relative URL has no path, use base path
         if (empty($r['path'])) {
             if (!empty($b['path']))
                 $r['path'] = $b['path'];
@@ -46,7 +55,7 @@ class UrlHandler
             return $this->joinUrl($r);
         }
 
-// If relative URL path doesn't start with /, merge with base path
+        // If relative URL path doesn't start with /, merge with base path
         if ($r['path'][0] != '/') {
             $base = mb_strrchr($b['path'], '/', TRUE, 'UTF-8');
             if ($base === FALSE) $base = '';
@@ -56,7 +65,10 @@ class UrlHandler
         return $this->joinUrl($r);
     }
 
-
+    /**
+     * @param $path
+     * @return string
+     */
     private function removeDotSegments($path)
     {
         // multi-byte character explode
@@ -81,7 +93,11 @@ class UrlHandler
         return $outPath;
     }
 
-
+    /**
+     * @param $url
+     * @param bool $decode
+     * @return mixed
+     */
     private function splitUrl($url, $decode = TRUE)
     {
         $xunressub = 'a-zA-Z\d\-._~\!$&\'()*+,;=';
@@ -158,9 +174,12 @@ class UrlHandler
         return $parts;
     }
 
-
-    private
-    function joinUrl($parts, $encode = TRUE)
+    /**
+     * @param $parts
+     * @param bool $encode
+     * @return string
+     */
+    private function joinUrl($parts, $encode = TRUE)
     {
         if ($encode) {
             if (isset($parts['user']))
@@ -208,5 +227,4 @@ class UrlHandler
             $url .= '#' . $parts['fragment'];
         return $url;
     }
-
 }
