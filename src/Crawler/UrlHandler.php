@@ -62,7 +62,9 @@ class UrlHandler
             $r['path'] = $base . '/' . $r['path'];
         }
         $r['path'] = $this->removeDotSegments($r['path']);
-        return $this->joinUrl($r);
+        $u = $this->joinUrl($r);
+        $u = urldecode($u);
+        return $u;
     }
 
     /**
